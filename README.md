@@ -1,5 +1,5 @@
 # nft-dapp
-!Try here [https://playful-druid-023855.netlify.app/]
+Try here https://playful-druid-023855.netlify.app/
 
 ## Project setup
 ```
