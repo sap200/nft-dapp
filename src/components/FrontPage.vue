@@ -260,15 +260,54 @@ export default {
       }
     } else {
 
-      this.successMessage = "Error: Wallet not found please install metamask from : https://metamask.io/download.html"
+      this.errorMessage = "Error: Wallet not found please install metamask from : https://metamask.io/download.html"
     }
+
+    
 
     },
 
-    setWallet() {
-      this.connetWalletVariable = this.fWallet;
+    formatAddress(address) {
+      let lastInitial =  address.length - 4;
+      let lastLast = address.length
+      return 'Connected: ' + address.slice(0, 7) + "..." + address.slice(lastInitial, lastLast);
     }
+
   }, 
+
+  async mounted() {
+
+    console.log("hi");
+    if (window.ethereum) {
+      try {
+        const addressArray = await window.ethereum.request({
+          method: "eth_accounts",
+        });
+
+        this.walletAddress = addressArray[0];
+        this.connetWalletVariable = this.formatAddress(addressArray[0]); 
+        localStorage.setItem("wallet_address", addressArray[0]);
+      } catch(err) {
+        // do nothing
+        console.log(err);
+      }
+    } else {
+      this.errorMessage = "Error: Wallet not found please install metamask from : https://metamask.io/download.html" 
+    }
+
+      // register listener
+      // register listener
+
+      let obj2 = this;
+
+      window.ethereum.on("accountsChanged", (accounts) => {
+      if (accounts.length > 0) {
+        this.connetWalletVariable = obj2.formatAddress(accounts[0]);
+        localStorage.setItem("wallet_address", accounts[0]);
+        this.walletAddress = accounts[0];
+      }});
+
+  }
 
 }
 
